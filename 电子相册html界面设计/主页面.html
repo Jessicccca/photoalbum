@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电子相册系统 - 主界面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* 顶部导航栏 */
+        .header {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 30px;
+            position: relative;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 15px;
+            padding-left: 40px;
+        }
+        
+        .search-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .search-bar input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-item {
+            margin-left: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: background 0.3s;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-icon {
+            margin-right: 5px;
+            font-size: 18px;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            color: #6a11cb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        /* 主要内容区 */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: flex;
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-right: 30px;
+            height: fit-content;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+        
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #555;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar-icon {
+            margin-right: 8px;
+            color: #6a11cb;
+        }
+        
+        .sidebar-list {
+            list-style: none;
+        }
+        
+        .sidebar-list li {
+            margin-bottom: 10px;
+            padding: 8px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar-list li:hover {
+            background: #f0f2f5;
+        }
+        
+        .sidebar-list li.active {
+            background: #e6f0ff;
+            color: #2575fc;
+            font-weight: 500;
+        }
+        
+        .list-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .tag {
+            background: #f0f2f5;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .tag:hover {
+            background: #e0e5eb;
+        }
+        
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+        }
+        
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .content-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .view-options {
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .view-option {
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .view-option.active {
+            background: #6a11cb;
+            color: white;
+        }
+        
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .photo-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .photo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .photo-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .photo-info {
+            padding: 15px;
+        }
+        
+        .photo-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .photo-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #777;
+        }
+        
+        .photo-actions {
+            display: flex;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+        }
+        
+        .action-btn {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .action-btn:hover {
+            color: #6a11cb;
+        }
+        
+        .action-icon {
+            margin-right: 5px;
+        }
+        
+        /* 上传按钮 */
+        .upload-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.4);
+            cursor: pointer;
+            transition: transform 0.3s;
+            z-index: 90;
+        }
+        
+        .upload-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 30px;
+            }
+            
+            .photo-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-wrap: wrap;
+            }
+            
+            .search-bar {
+                order: 3;
+                max-width: 100%;
+                margin: 15px 0 0;
+            }
+            
+            .photo-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="header">
+        <div class="navbar">
+            <div class="logo">
+                <span class="logo-icon">📷</span>
+                <span>电子相册</span>
+            </div>
+            
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="搜索照片、相册或用户...">
+            </div>
+            
+            <div class="nav-links">
+                <div class="nav-item">
+                    <span class="nav-icon">🏠</span>
+                    <span>首页</span>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">➕</span>
+                    <span>创建</span>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">🔔</span>
+                    <span>通知</span>
+                </div>
+                <div class="nav-item">
+                    <div class="user-avatar">张</div>
+                    <span>张三</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <div class="container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">
+                    <span class="sidebar-icon">📂</span>
+                    我的相册
+                </h3>
+                <ul class="sidebar-list">
+                    <li class="active">
+                        <span class="list-icon">🖼️</span>
+                        全部照片
+                    </li>
+                    <li>
+                        <span class="list-icon">🏞️</span>
+                        风景摄影
+                    </li>
+                    <li>
+                        <span class="list-icon">👨‍👩‍👧‍👦</span>
+                        家庭相册
+                    </li>
+                    <li>
+                        <span class="list-icon">🎉</span>
+                        活动记录
+                    </li>
+                    <li>
+                        <span class="list-icon">🐱</span>
+                        宠物日常
+                    </li>
+                    <li>
+                        <span class="list-icon">➕</span>
+                        新建相册
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">
+                    <span class="sidebar-icon">🏷️</span>
+                    标签分类
+                </h3>
+                <div class="tag-list">
+                    <span class="tag">#旅行</span>
+                    <span class="tag">#美食</span>
+                    <span class="tag">#自然</span>
+                    <span class="tag">#城市</span>
+                    <span class="tag">#人物</span>
+                    <span class="tag">#建筑</span>
+                    <span class="tag">#节日</span>
+                    <span class="tag">#夜景</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">
+                    <span class="sidebar-icon">🕒</span>
+                    最近活动
+                </h3>
+                <ul class="sidebar-list">
+                    <li>
+                        <span class="list-icon">👤</span>
+                        李四赞了你的照片
+                    </li>
+                    <li>
+                        <span class="list-icon">💬</span>
+                        王五评论了你的照片
+                    </li>
+                    <li>
+                        <span class="list-icon">📸</span>
+                        你上传了5张新照片
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <div class="content-header">
+                <h2 class="content-title">全部照片</h2>
+                <div class="view-options">
+                    <div class="view-option active">网格视图</div>
+                    <div class="view-option">列表视图</div>
+                    <div class="view-option">时间线</div>
+                </div>
+            </div>
+            
+            <div class="photo-grid">
+                <!-- 照片卡片1 -->
+                <div class="photo-card">
+                    <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="自然风景" class="photo-img">
+                    <div class="photo-info">
+                        <div class="photo-title">山间日出</div>
+                        <div class="photo-meta">
+                            <span>2023-10-15</span>
+                            <span>风景</span>
+                        </div>
+                        <div class="photo-actions">
+                            <div class="action-btn">
+                                <span class="action-icon">❤️</span>
+                                <span>24</span>
+                            </div>
+                            <div class="action-btn">
+                                <span class="action-icon">💬</span>
+                                <span>5</span>
+                            </div>
+                            <div class="action-btn">
+                                <span class="action-icon">↗️</span>
+                                <span>分享</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 照片卡片2 -->
+                <div class="photo-card">
+                    <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="猫咪" class="photo-img">
+                    <div class="photo-info">
+                        <div class="photo-title">午后小憩</div>
+                        <div class="photo-meta">
+                            <span>2023-10-10</span>
+                            <span>宠物</span>
+                        </div>
+                        <div class="photo-actions">
+                            <div class="action-btn">
+                                <span class="action-icon">❤️</span>
+                                <span>42</span>
+                            </div>
+                            <div class="action-btn">
+                                <span class="action-icon">💬</span>
+                                <span>8</span>
+                            </div>
+                            <div class="action-btn">
+                                <span class="action-icon">↗️</span>
+                                <span>分享</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 照片卡片3 -->
+                <div class="photo-card">
+                    <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="自然风景" class="photo-img">
+                    <div class="photo-info">
+                        <div class="photo-title">湖畔黄昏</div>
+                        <div class="photo-meta">
+                            <span>2023-10-05</span>
+                            <span>风景</span>
+                        </div>
+                        <div class="photo-actions">
+                            <div class="action-btn">
+                                <span class="action-icon">❤️</span>
+                                <span>36</span>
+                            </div>
+                            <div class="action-btn">
+                                <span class="action-icon">💬</span>
+                                <span>12</span>
+                            </div>
+                            <div class="action-btn">
+                                <span class="action-icon">↗️</span>
+                                <span>分享</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 照片卡片4 -->
+                <div class="photo-card">
+                    <img src="https://images.unsplash.com/photo-1551963831-b3b1ca40c98e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="早餐" class="photo-img">
+                    <div class="photo-info">
+                        <div class="photo-title">美味早餐</div>
+                        <div class="photo-meta">
+                            <span>2023-09-28</span>
+                            <span>美食</span>
+                        </div>
+                        <div class="photo-actions">
+                            <div class="action-btn">
+                                <span class="action-icon">❤️</span>
+                                <span>29</span>
+                            </div>
+                            <div class="action-btn">
+                                <span class="action-icon">💬</span>
+                                <span>7</span>
+                            </div>
+                            <div class="action-btn">
+                                <span class="action-icon">↗️</span>
+                                <span>分享</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 照片卡片5 -->
+                <div class="photo-card">
+                    <img src="https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="森林" class="photo-img">
+                    <div class="photo-info">
+                        <div class="photo-title">森林小径</div>
+                        <div class="photo-meta">
+                            <span>2023-09-20</span>
+                            <span>自然</span>
+                        </div>
+                        <div class="photo-actions">
+                            <div class="action-btn">
+                                <span class="action-icon">❤️</span>
+                                <span>51</span>
+                            </div>
+                            <div class="action-btn">
+                                <span class="action-icon">💬</span>
+                                <span>14</span>
+                            </div>
+                            <div class="action-btn">
+                                <span class="action-icon">↗️</span>
+                                <span>分享</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 照片卡片6 -->
+                <div class="photo-card">
+                    <img src="https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="海滩" class="photo-img">
+                    <div class="photo-info">
+                        <div class="photo-title">金色沙滩</div>
+                        <div class="photo-meta">
+                            <span>2023-09-15</span>
+                            <span>旅行</span>
+                        </div>
+                        <div class="photo-actions">
+                            <div class="action-btn">
+                                <span class="action-icon">❤️</span>
+                                <span>67</span>
+                            </div>
+                            <div class="action-btn">
+                                <span class="action-icon">💬</span>
+                                <span>19</span>
+                            </div>
+                            <div class="action-btn">
+                                <span class="action-icon">↗️</span>
+                                <span>分享</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 上传按钮 -->
+    <div class="upload-btn">+</div>
+
+    <script>
+        // 切换视图模式
+        const viewOptions = document.querySelectorAll('.view-option');
+        viewOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                viewOptions.forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                
+                // 在实际应用中，这里会根据选择的视图模式重新渲染照片列表
+                alert(`切换到${this.textContent}`);
+            });
+        });
+        
+        // 侧边栏菜单项点击事件
+        const sidebarItems = document.querySelectorAll('.sidebar-list li');
+        sidebarItems.forEach(item => {
+            item.addEventListener('click', function() {
+                if(this.textContent.includes('新建相册')) {
+                    alert('打开创建新相册对话框');
+                    return;
+                }
+                
+                sidebarItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                
+                // 在实际应用中，这里会加载对应相册的照片
+                const albumName = this.textContent.trim();
+                document.querySelector('.content-title').textContent = albumName;
+            });
+        });
+        
+        // 标签点击事件
+        const tags = document.querySelectorAll('.tag');
+        tags.forEach(tag => {
+            tag.addEventListener('click', function() {
+                // 在实际应用中，这里会根据标签筛选照片
+                const tagName = this.textContent;
+                alert(`筛选标签: ${tagName}`);
+            });
+        });
+        
+        // 搜索功能
+        const searchInput = document.querySelector('.search-bar input');
+        searchInput.addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') {
+                // 在实际应用中，这里会执行搜索
+                alert(`搜索关键词: ${this.value}`);
+            }
+        });
+        
+        // 上传按钮点击事件
+        const uploadBtn = document.querySelector('.upload-btn');
+        uploadBtn.addEventListener('click', function() {
+            alert('打开上传照片对话框');
+        });
+        
+        // 照片卡片点击事件
+        const photoCards = document.querySelectorAll('.photo-card');
+        photoCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // 在实际应用中，这里会打开照片详情页
+                const title = this.querySelector('.photo-title').textContent;
+                alert(`查看照片: ${title}`);
+            });
+        });
+    </script>
+</body>
+</html>
