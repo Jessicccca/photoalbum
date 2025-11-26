@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电子相册系统 - 评论</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* 顶部导航栏 */
+        .header {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-item {
+            margin-left: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: background 0.3s;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-icon {
+            margin-right: 5px;
+            font-size: 18px;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            color: #6a11cb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        /* 主要内容区 */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 30px;
+        }
+        
+        /* 照片详情区 */
+        .photo-section {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        
+        .photo-img {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+        }
+        
+        .photo-info {
+            padding: 20px;
+        }
+        
+        .photo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .photo-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .photo-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .photo-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .photo-actions {
+            display: flex;
+            gap: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: #f5f7fa;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            background: #eaeef3;
+        }
+        
+        .action-btn.active {
+            background: #e6f0ff;
+            color: #2575fc;
+        }
+        
+        .action-icon {
+            font-size: 18px;
+        }
+        
+        /* 评论区域 */
+        .comments-section {
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .comments-header {
+            background: white;
+            border-radius: 10px 10px 0 0;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .comments-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .comments-count {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .comments-list {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 600px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .comment-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .comment-item:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .comment-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .comment-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #6a11cb;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .comment-user {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .comment-time {
+            color: #999;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .comment-content {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .comment-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .comment-action {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .comment-action:hover {
+            color: #6a11cb;
+        }
+        
+        .reply-form {
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .reply-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            resize: vertical;
+            min-height: 60px;
+            font-size: 14px;
+        }
+        
+        .reply-input:focus {
+            outline: none;
+            border-color: #6a11cb;
+        }
+        
+        .reply-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .reply-btn, .cancel-btn {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .reply-btn {
+            background: #6a11cb;
+            color: white;
+            border: none;
+        }
+        
+        .reply-btn:hover {
+            background: #5a0db5;
+        }
+        
+        .cancel-btn {
+            background: #f5f7fa;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+        
+        .cancel-btn:hover {
+            background: #eaeef3;
+        }
+        
+        /* 评论表单 */
+        .comment-form {
+            background: white;
+            border-radius: 0 0 10px 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .comment-input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+            min-height: 80px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .comment-input:focus {
+            outline: none;
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 2px rgba(106, 17, 203, 0.1);
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .submit-btn {
+            padding: 10px 20px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(106, 17, 203, 0.2);
+        }
+        
+        .submit-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .char-count {
+            font-size: 13px;
+            color: #999;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .comments-section {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .photo-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .photo-actions {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="header">
+        <div class="navbar">
+            <div class="logo">
+                <span class="logo-icon">📷</span>
+                <span>电子相册</span>
+            </div>
+            
+            <div class="nav-links">
+                <div class="nav-item">
+                    <span class="nav-icon">🏠</span>
+                    <span>首页</span>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">🔔</span>
+                    <span>通知</span>
+                </div>
+                <div class="nav-item">
+                    <div class="user-avatar">张</div>
+                    <span>张三</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <div class="container">
+        <!-- 照片详情区 -->
+        <section class="photo-section">
+            <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="山间日出" class="photo-img">
+            
+            <div class="photo-info">
+                <div class="photo-header">
+                    <h1 class="photo-title">山间日出</h1>
+                    <div class="action-btn">
+                        <span class="action-icon">❤️</span>
+                        <span>24</span>
+                    </div>
+                </div>
+                
+                <div class="photo-meta">
+                    <span>上传者: 张三</span>
+                    <span>上传时间: 2023-10-15</span>
+                    <span>分类: 风景</span>
+                </div>
+                
+                <p class="photo-description">
+                    这是我在黄山拍摄的日出美景。清晨的薄雾笼罩着山峦，太阳缓缓升起，金色的阳光洒在山峰上，形成了一幅壮丽的画卷。这一刻的宁静与美丽令人难忘。
+                </p>
+                
+                <div class="photo-actions">
+                    <div class="action-btn active">
+                        <span class="action-icon">❤️</span>
+                        <span>已点赞</span>
+                    </div>
+                    <div class="action-btn">
+                        <span class="action-icon">💬</span>
+                        <span>评论</span>
+                    </div>
+                    <div class="action-btn">
+                        <span class="action-icon">↗️</span>
+                        <span>分享</span>
+                    </div>
+                    <div class="action-btn">
+                        <span class="action-icon">🔖</span>
+                        <span>收藏</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 评论区域 -->
+        <section class="comments-section">
+            <div class="comments-header">
+                <h2 class="comments-title">评论</h2>
+                <div class="comments-count">共 8 条评论</div>
+            </div>
+            
+            <div class="comments-list">
+                <!-- 评论项1 -->
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <div class="comment-avatar">李</div>
+                        <div class="comment-user">李四</div>
+                        <div class="comment-time">2小时前</div>
+                    </div>
+                    <div class="comment-content">
+                        这张照片太美了！日出的色彩真的很震撼，能感受到那一刻的宁静与壮丽。
+                    </div>
+                    <div class="comment-actions">
+                        <div class="comment-action" onclick="toggleReplyForm(this)">
+                            <span>回复</span>
+                        </div>
+                        <div class="comment-action">
+                            <span>👍</span>
+                            <span>12</span>
+                        </div>
+                    </div>
+                    
+                    <div class="reply-form">
+                        <textarea class="reply-input" placeholder="写下你的回复..."></textarea>
+                        <div class="reply-actions">
+                            <button class="cancel-btn" onclick="cancelReply(this)">取消</button>
+                            <button class="reply-btn" onclick="submitReply(this)">回复</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 评论项2 -->
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <div class="comment-avatar">王</div>
+                        <div class="comment-user">王五</div>
+                        <div class="comment-time">5小时前</div>
+                    </div>
+                    <div class="comment-content">
+                        请问这是在哪里拍的？我也想去这个地方看看日出！
+                    </div>
+                    <div class="comment-actions">
+                        <div class="comment-action" onclick="toggleReplyForm(this)">
+                            <span>回复</span>
+                        </div>
+                        <div class="comment-action">
+                            <span>👍</span>
+                            <span>8</span>
+                        </div>
+                    </div>
+                    
+                    <div class="reply-form">
+                        <textarea class="reply-input" placeholder="写下你的回复..."></textarea>
+                        <div class="reply-actions">
+                            <button class="cancel-btn" onclick="cancelReply(this)">取消</button>
+                            <button class="reply-btn" onclick="submitReply(this)">回复</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 回复项 -->
+                    <div class="comment-item" style="margin-left: 20px; margin-top: 15px;">
+                        <div class="comment-header">
+                            <div class="comment-avatar">张</div>
+                            <div class="comment-user">张三</div>
+                            <div class="comment-time">3小时前</div>
+                        </div>
+                        <div class="comment-content">
+                            这是在黄山的光明顶拍的，建议提前一天住在山上，早上5点前到观景台等待日出。
+                        </div>
+                        <div class="comment-actions">
+                            <div class="comment-action" onclick="toggleReplyForm(this)">
+                                <span>回复</span>
+                            </div>
+                            <div class="comment-action">
+                                <span>👍</span>
+                                <span>5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 评论项3 -->
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <div class="comment-avatar">赵</div>
+                        <div class="comment-user">赵六</div>
+                        <div class="comment-time">1天前</div>
+                    </div>
+                    <div class="comment-content">
+                        光影效果处理得真好，后期调色也很自然，学习了！
+                    </div>
+                    <div class="comment-actions">
+                        <div class="comment-action" onclick="toggleReplyForm(this)">
+                            <span>回复</span>
+                        </div>
+                        <div class="comment-action">
+                            <span>👍</span>
+                            <span>15</span>
+                        </div>
+                    </div>
+                    
+                    <div class="reply-form">
+                        <textarea class="reply-input" placeholder="写下你的回复..."></textarea>
+                        <div class="reply-actions">
+                            <button class="cancel-btn" onclick="cancelReply(this)">取消</button>
+                            <button class="reply-btn" onclick="submitReply(this)">回复</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 评论表单 -->
+            <div class="comment-form">
+                <textarea class="comment-input" placeholder="写下你的评论..." maxlength="500"></textarea>
+                <div class="form-actions">
+                    <div class="char-count"><span id="charCount">0</span>/500</div>
+                    <button class="submit-btn" id="submitComment" disabled>发表评论</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 字符计数
+        const commentInput = document.querySelector('.comment-input');
+        const charCount = document.getElementById('charCount');
+        const submitBtn = document.getElementById('submitComment');
+        
+        commentInput.addEventListener('input', function() {
+            const length = this.value.length;
+            charCount.textContent = length;
+            
+            if (length > 0 && length <= 500) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        });
+        
+        // 提交评论
+        submitBtn.addEventListener('click', function() {
+            const content = commentInput.value.trim();
+            
+            if (content.length === 0) {
+                alert('评论内容不能为空！');
+                return;
+            }
+            
+            // 模拟提交过程
+            submitBtn.textContent = '提交中...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                alert('评论发表成功！');
+                commentInput.value = '';
+                charCount.textContent = '0';
+                submitBtn.textContent = '发表评论';
+                submitBtn.disabled = true;
+                
+                // 在实际应用中，这里会更新评论列表
+            }, 1000);
+        });
+        
+        // 切换回复表单显示
+        function toggleReplyForm(element) {
+            const replyForm = element.closest('.comment-item').querySelector('.reply-form');
+            const isVisible = replyForm.style.display === 'block';
+            
+            // 隐藏所有其他回复表单
+            document.querySelectorAll('.reply-form').forEach(form => {
+                form.style.display = 'none';
+            });
+            
+            // 切换当前回复表单
+            replyForm.style.display = isVisible ? 'none' : 'block';
+            
+            if (!isVisible) {
+                replyForm.querySelector('.reply-input').focus();
+            }
+        }
+        
+        // 取消回复
+        function cancelReply(element) {
+            const replyForm = element.closest('.reply-form');
+            replyForm.style.display = 'none';
+            replyForm.querySelector('.reply-input').value = '';
+        }
+        
+        // 提交回复
+        function submitReply(element) {
+            const replyForm = element.closest('.reply-form');
+            const replyInput = replyForm.querySelector('.reply-input');
+            const content = replyInput.value.trim();
+            
+            if (content.length === 0) {
+                alert('回复内容不能为空！');
+                return;
+            }
+            
+            // 模拟提交过程
+            element.textContent = '提交中...';
+            element.disabled = true;
+            
+            setTimeout(() => {
+                alert('回复发表成功！');
+                replyInput.value = '';
+                replyForm.style.display = 'none';
+                element.textContent = '回复';
+                element.disabled = false;
+                
+                // 在实际应用中，这里会更新回复列表
+            }, 1000);
+        }
+        
+        // 点赞功能
+        document.querySelectorAll('.comment-action').forEach(action => {
+            if (action.innerHTML.includes('👍')) {
+                action.addEventListener('click', function() {
+                    const countElement = this.querySelector('span:last-child');
+                    let count = parseInt(countElement.textContent);
+                    count++;
+                    countElement.textContent = count;
+                    
+                    // 在实际应用中，这里会发送点赞请求到服务器
+                });
+            }
+        });
+        
+        // 照片操作按钮
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.classList.contains('active')) {
+                    this.classList.remove('active');
+                } else {
+                    this.classList.add('active');
+                }
+                
+                // 在实际应用中，这里会执行相应的操作（点赞、收藏等）
+            });
+        });
+    </script>
+</body>
+</html>
